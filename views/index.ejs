@@ -28,6 +28,9 @@
 		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 		
 		<script> 
+
+			
+
 			$( document ).ready(function() {
 				var socket = io();
 
@@ -43,16 +46,32 @@
 					return false; // Estää lomakkeen lähtemisen, eli html-sivu ei refreshaudu.
 				});
 
+				socket.on('privaviesti', function(v) {
 
+					$('#viestit').append($('<li class="private">').text(v.username + ": " + v.msg));
+					$('.msgs')[0].scrollTop = $('.msgs')[0].scrollHeight;
+
+				});
+
+				socket.on('boldviesti', function(v) {
+
+					$('#viestit').append($('<li class="boldattu">').text(v.username + ": " + v.msg));
+					$('.msgs')[0].scrollTop = $('.msgs')[0].scrollHeight;
+
+
+				});
 
 				socket.on('viesti', function(v) {
 
 					$('#viestit').append($('<li>').text(v.username + ": " + v.msg));
+					$('.msgs')[0].scrollTop = $('.msgs')[0].scrollHeight;
+
+
 				});
 
 				socket.on('akronyymi', function(v) {
 
-					$('.puzzlebox').html('<h2><strong>Akronyymi: </strong>' + v + "</h2>");
+					$('.puzzlebox').html('<h2>' + v + "</h2>");
 				});
 
 				socket.on('kello', function(v) {
