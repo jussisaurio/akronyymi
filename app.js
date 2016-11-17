@@ -11,6 +11,7 @@ var peliKaynnissa = false;
 var botName ="akroBotti";
 var alkukirjaimet =[];
 var akronyymi="";
+var users=[];
 
 app.set('view engine', 'ejs') // set the express view engine to ejs (embedded javascript & html)
 app.use('/styles', express.static('styles')); // route requests to styles folder (html file requests css files)
@@ -70,8 +71,13 @@ function kasitteleVastaus (vastaus, pelaaja) {
 
 io.on('connection', function(socket) {
 
-	var welcomeData = {username: botName, msg: "Tervetuloa pelaamaan!"};
-	io.emit('viesti', welcomeData);
+	socket.on('join', function(session) {
+
+		users[socket.id] = session.username;
+		var welcomeData = {username: botName, msg: "Vitun " + users[socket.id] + " tervetuloo tsättäILEEEN, tän pitäs näkyy sulle vaa privana ;)"};
+		socket.emit('viesti', welcomeData);
+	});
+	
 
 
 	socket.on('viesti', function(v) {
@@ -85,10 +91,11 @@ io.on('connection', function(socket) {
 			// jos /nick ja tasan yksi parametri jonka pituus max 20, vaihetaan nicknamea parametrin mukaisesti
 			if (msgArray[0] === "/nick" && msgArray.length === 2 && msgArray[1].length < 21) {
 
-				var oldUser = v.username;
+				var oldUser = users[socket.id];
 				v.username = botName;
-				v.newName = msgArray[1];
-				v.msg = "*** " + oldUser + " vaihtoi nimimerkikseen " + msgArray[1] + " ***";
+				users[socket.id] = msgArray[1];
+				v.newName = users[socket.id];
+				v.msg = "*** " + oldUser + " vaihtoi nimimerkikseen " + users[socket.id] + " ***";
 				v.nickChange = true;
 				io.emit('viesti', v);
 			}

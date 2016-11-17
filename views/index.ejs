@@ -33,6 +33,8 @@
 
 				var animals = ["Monkey", "Zebra", "Pigeon", "Hamster", "Kookaburra", "Chimp", "Dog", "Hippo", "Rhinoceros"];
 				var username = "Anonymous" + animals[Math.floor(Math.random()*animals.length)] + Math.floor(Math.random()*100);
+				var data = {username: username};
+				socket.emit('join', data);
 
 				$('form').submit(function() {
 
