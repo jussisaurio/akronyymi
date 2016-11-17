@@ -73,6 +73,14 @@ io.on('connection', function(socket) {
 				v.msg = "*** " + oldUser + " vaihtoi nimimerkikseen " + users[socket.id] + " ***";
 				v.nickChange = true;
 				io.emit('viesti', v);
+
+				var userlist="";
+				Object.keys(users).forEach(function (key){
+
+					userlist += users[key] +" ";
+				});
+				console.log(users);
+				io.emit('kayttajat', userlist);
 			}
 
 			if (msgArray[0] === "/aloita" && msgArray.length <= 2 && pelivaihe=="ei") {
