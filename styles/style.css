@@ -1,0 +1,48 @@
+* { margin: 0; padding: 0; box-sizing: border-box;}
+body {font: 13px Helvetica, Arial;}
+form {background: #000; padding: 3px; border-radius: 5px; position: fixed; left: 17%; bottom: 10px; width: 66%;}
+form input {border: 0; padding: 10px; width: 90%; margin-right: .5%;}
+form button {color: white; font-weight: bold; width: 9%; background: darkblue; border: solid 2px darkblue; border-radius: 5px; padding: 10px;}
+form button:hover {background: white; color: darkblue;}
+
+#viestit { list-style-type: none; padding: 0; width:100%;}
+#viestit li {padding: 5px 10px;}
+#viestit li:nth-child(odd) { background: #eee; }
+
+.msgs {
+
+	border: solid 2px black;
+	border-radius: 10px;
+	padding: 20px;
+	width: 66%;
+	position: fixed;
+	top: 310px;
+	left: 17%;
+}
+
+.page-header {
+
+	position: fixed; left: 17%; top: 0; width: 66%;
+	text-align: center;
+	font-size: 80px;
+}
+
+.puzzlebox {
+
+	position: fixed;
+	width: 50%;
+	left: 25%;
+	top: 180px;
+	height: 70px;
+	text-align: center;
+	padding: 0;
+}
+
+.timer {
+
+	position: fixed;
+	top: 250px;
+	left: 50%;
+	text-align: center;
+
+}

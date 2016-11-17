@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+   		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>PASKA - Peli Akronyymien Selittämiseen Komiikan Avulla</title>
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/styles/style.css">
+	</head>
+	<body>
+					<div class="page-header">
+						<h1>PASKA</h1>
+					<h4>Peli Akronyymien Selittämiseen Komiikan Avulla</h4>
+					</div>
+					<div class="jumbotron puzzlebox"></div>
+					<div class="timer" align="center"></div>
+					<div class="msgs">
+					<ul id="viestit"></ul>
+					</div>
+		<form action="">
+			<input id="v" autocomplete="off" /><button type="submit">Send</button>
+		</form>
+
+
+		<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+		
+		<script> 
+			$( document ).ready(function() {
+				var socket = io();
+
+				var animals = ["Monkey", "Zebra", "Pigeon", "Hamster", "Kookaburra", "Chimp", "Dog", "Hippo", "Rhinoceros"];
+				var username = "Anonymous" + animals[Math.floor(Math.random()*animals.length)] + Math.floor(Math.random()*100);
+
+				$('form').submit(function() {
+
+					var data = {username: username, msg: $('#v').val()};
+					socket.emit('viesti', data);
+
+					$('#v').val('');
+					return false; // Estää lomakkeen lähtemisen, eli html-sivu ei refreshaudu.
+				});
+
+				socket.on('viesti', function(v) {
+
+					if (v.nickChange) username = v.newName;
+					$('#viestit').append($('<li>').text(v.username + ": " + v.msg));
+				});
+
+				socket.on('akronyymi', function(v) {
+
+					$('.puzzlebox').html('<h2><strong>Akronyymi: </strong>' + v + "</h2>");
+				});
+
+				socket.on('kello', function(v) {
+
+					$('.timer').html('<h3><strong>' + v + '</strong></h3>');
+				});
+
+			});
+
+		</script>
+	</body>
+</html>
+	
