@@ -12,6 +12,7 @@ var botName ="akroBotti";
 var alkukirjaimet =[];
 var akronyymi="";
 var users=[];
+var animals = ["Monkey", "Zebra", "Pigeon", "Hamster", "Kookaburra", "Chimp", "Dog", "Hippo", "Rhinoceros"];
 
 app.set('view engine', 'ejs') // set the express view engine to ejs (embedded javascript & html)
 app.use('/styles', express.static('styles')); // route requests to styles folder (html file requests css files)
@@ -73,7 +74,9 @@ io.on('connection', function(socket) {
 
 	socket.on('join', function(session) {
 
-		users[socket.id] = session.username;
+		
+		users[socket.id] = "Anonymous" + animals[Math.floor(Math.random()*animals.length)] + Math.floor(Math.random()*100);
+				var data = {username: users[socket.id]};
 		var welcomeData = {username: botName, msg: "Vitun " + users[socket.id] + " tervetuloo tsättäILEEEN, tän pitäs näkyy sulle vaa privana ;)"};
 		socket.emit('viesti', welcomeData);
 	});
@@ -82,6 +85,7 @@ io.on('connection', function(socket) {
 
 	socket.on('viesti', function(v) {
 
+		v.username = users[socket.id];
 		// Käyttäjä antaa komennon viestin sijaan
 		if (v.msg[0] === "/") {
 
@@ -122,7 +126,12 @@ io.on('connection', function(socket) {
 		else io.emit('viesti', v);
 	});
 
-	socket.on('disconnect', function() {console.log('käyttäjä katkaisi yhteyden');});
+	socket.on('disconnect', function() {
+
+		console.log('käyttäjä katkaisi yhteyden');
+		delete users[socket.id];
+
+	});
 
 
 	

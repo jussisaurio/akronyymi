@@ -31,23 +31,22 @@
 			$( document ).ready(function() {
 				var socket = io();
 
-				var animals = ["Monkey", "Zebra", "Pigeon", "Hamster", "Kookaburra", "Chimp", "Dog", "Hippo", "Rhinoceros"];
-				var username = "Anonymous" + animals[Math.floor(Math.random()*animals.length)] + Math.floor(Math.random()*100);
-				var data = {username: username};
-				socket.emit('join', data);
+				
+				socket.emit('join');
 
 				$('form').submit(function() {
 
-					var data = {username: username, msg: $('#v').val()};
+					var data = {msg: $('#v').val()};
 					socket.emit('viesti', data);
 
 					$('#v').val('');
 					return false; // Estää lomakkeen lähtemisen, eli html-sivu ei refreshaudu.
 				});
 
+			
+
 				socket.on('viesti', function(v) {
 
-					if (v.nickChange) username = v.newName;
 					$('#viestit').append($('<li>').text(v.username + ": " + v.msg));
 				});
 
