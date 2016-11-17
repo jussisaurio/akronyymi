@@ -1,6 +1,6 @@
 * { margin: 0; padding: 0; box-sizing: border-box;}
 body {font: 13px Helvetica, Arial;}
-form {background: #000; padding: 3px; border-radius: 5px; position: relative; left: 17%; top: 15px; width: 66%;}
+form {background: #000; padding: 3px; border-radius: 10px; position: relative; left: 17%; top: 15px; width: 66%;}
 form input {border: 0; padding: 10px; width: 90%; margin-right: .5%;}
 form button {color: white; font-weight: bold; width: 9%; background: darkblue; border: solid 2px darkblue; border-radius: 5px; padding: 10px;}
 form button:hover {background: white; color: darkblue;}
@@ -20,6 +20,20 @@ form button:hover {background: white; color: darkblue;}
 	left: 17%;
 	height: 500px;
 	overflow-y: scroll;
+	display: block;
+}
+
+.nicks {
+
+	border: solid 2px black;
+	border-radius: 10px;
+	padding: 10px;
+	width: 66%;
+	position: relative;
+	top: 20px;
+	left: 17%;
+	height: 40px;
+	overflow: hidden;
 	display: block;
 }
 

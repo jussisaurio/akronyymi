@@ -34,6 +34,7 @@ app.get('/', function (req, res) {
 
 io.on('connection', function(socket) {
 
+
 	socket.on('join', function(session) {
 
 		
@@ -41,6 +42,14 @@ io.on('connection', function(socket) {
 				var data = {username: users[socket.id]};
 		var welcomeData = {username: botName, msg: "Vitun " + users[socket.id] + " tervetuloo tsättäILEEEN, tän pitäs näkyy sulle vaa privana ;)"};
 		socket.emit('privaviesti', welcomeData);
+		
+		var userlist="";
+		Object.keys(users).forEach(function (key){
+
+			userlist += users[key] +" ";
+		});
+		console.log(users);
+		io.emit('kayttajat', userlist);
 	});
 	
 
@@ -99,6 +108,13 @@ io.on('connection', function(socket) {
 
 		console.log('käyttäjä katkaisi yhteyden');
 		delete users[socket.id];
+		var userlist="";
+		Object.keys(users).forEach(function (key){
+
+			userlist += users[key] +" ";
+		});
+		console.log(users);
+		io.emit('kayttajat', userlist);
 
 	});
 
@@ -120,17 +136,44 @@ io.on('connection', function(socket) {
 		
 
 		var akrPituus = Math.round(Math.random()*4+3);
-		
+		var rand=0; var kirj="";
 		for (var k=0; k < akrPituus; k++) {
 
-		alkukirjaimet.push(String.fromCharCode(Math.floor(Math.random()*22 + 65)));
+		rand = Math.random()*986;
+		
+		if (rand < 116) kirj ="A"; 
+		else if (rand < 223) kirj ="I"; 
+		else if (rand < 322) kirj ="T"; 
+		else if (rand < 409) kirj ="N"; 
+		else if (rand < 491) kirj ="E"; 
+		else if (rand < 569) kirj ="S"; 
+		else if (rand < 626) kirj ="L"; 
+		else if (rand < 679) kirj ="O"; 
+		else if (rand < 732) kirj ="K"; 
+		else if (rand < 782) kirj ="U"; 
+		else if (rand < 830) kirj ="Ä"; 
+		else if (rand < 865) kirj ="M"; 
+		else if (rand < 890) kirj ="V"; 
+		else if (rand < 909) kirj ="R"; 
+		else if (rand < 917) kirj ="J"; 
+		else if (rand < 935) kirj ="H"; 
+		else if (rand < 953) kirj ="Y"; 
+		else if (rand < 969) kirj ="P"; 
+		else if (rand < 977) kirj ="D"; 
+		else if (rand < 982) kirj ="Ö"; 
+		else if (rand < 983) kirj ="G"; 
+		else if (rand < 984) kirj ="B";
+		else if (rand < 985) kirj ="F";
+		else if (rand < 986) kirj ="C";
+
+		alkukirjaimet.push(kirj);
 		}
 		akronyymi = alkukirjaimet.join('');
 
 		io.emit('boldviesti', {username: botName, msg: "Kierros " + kierros +": " +akronyymi});
 		io.emit('akronyymi', "Akronyymi: " + akronyymi);
 
-		aika=5;
+		aika=30;
 
 		var sekuntikello = setInterval(function() {
 
@@ -171,7 +214,7 @@ function listaaVastaukset() {
 		kierrospisteet[kierros][k]=0;
 	}
 	
-	aika=5;
+	aika=15;
 
 		var sekuntikello = setInterval(function() {
 
@@ -201,13 +244,13 @@ function kierrosTulokset() {
 function pelaajaPisteet() {
 
 	if (kierros <=4) {
-	io.emit('boldviesti', {username: botName, msg: "Välitulokset:"});
+	io.emit('viesti', {username: botName, msg: "Välitulokset:"});
 
 	console.log(Object.keys(tulokset));
 	}
 	
 	if (kierros===5) {
-	io.emit('boldviesti', {username: botName, msg: "Lopputulokset:"});
+	io.emit('viesti', {username: botName, msg: "Lopputulokset:"});
 
 	console.log(Object.keys(tulokset));
 

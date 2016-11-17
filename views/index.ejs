@@ -16,6 +16,8 @@
 					</div>
 					<div class="jumbotron puzzlebox"></div>
 					<div class="timer" align="center"></div>
+					<div class="nicks">Käyttäjiä linjoilla: 
+					</div>
 					<div class="msgs">
 					<ul id="viestit"></ul>
 					</div>
@@ -77,6 +79,12 @@
 				socket.on('kello', function(v) {
 
 					$('.timer').html('<h3><strong>' + v + '</strong></h3>');
+				});
+
+				socket.on('kayttajat', function(v) {
+
+					$('.nicks').html('<strong>Käyttäjiä linjoilla:</strong> ');
+					$('.nicks').append(v);
 				});
 
 			});
