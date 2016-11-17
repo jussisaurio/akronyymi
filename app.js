@@ -129,6 +129,6 @@ io.on('connection', function(socket) {
 	res.send(JSON.stringify(req.body));
 });*/
 
-var port=process.envPORT || 3000;
+var port=process.env.PORT || 3000;
 http.listen(port);
 console.log("Listening on port " + port);
