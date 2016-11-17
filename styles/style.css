@@ -18,6 +18,7 @@ form button:hover {background: white; color: darkblue;}
 	position: fixed;
 	top: 310px;
 	left: 17%;
+	overflow-y: scroll;
 }
 
 .page-header {
