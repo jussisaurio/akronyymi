@@ -13,6 +13,7 @@ var alkukirjaimet =[];
 var akronyymi="";
 var users=[];
 var vote=[];
+var answer=[];
 var kierrospisteet=[];
 var tulokset={};
 var animals = ["Apina", "Seepra", "Pulu", "Hamsteri", "Kookaburra", "Simpanssi", "Koira", "Norsu", "Bonobo", "Pässi", "Mufloni"];
@@ -138,6 +139,7 @@ io.on('connection', function(socket) {
 		alkukirjaimet =[];
 		vastaukset=[];
 		vote=[];
+		answer=[];
 		akronyymi="";
 		kierros++;
 		kierrospisteet[kierros]=[];
@@ -292,6 +294,7 @@ function kasitteleVastaus (vastaus, pelaaja) {
 
 	if (pelivaihe==="laadinta") {
 		
+		if (answer[socket.id]===true) validi=false;
 		if (vastaus.length !== alkukirjaimet.length) validi=false;
 		else {
 		for (var s=0; s < alkukirjaimet.length; s++) {
@@ -306,6 +309,7 @@ function kasitteleVastaus (vastaus, pelaaja) {
 		}
 		else {
 
+			answer[socket.id]=true;
 			vastaukset.push({pelaaja: pelaaja, vastaus: vastaus.join(' ')});
 			socket.emit('privaviesti', {username: botName, msg: pelaaja+": OK."});
 		}
