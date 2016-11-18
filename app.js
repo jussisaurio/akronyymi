@@ -1,3 +1,8 @@
+/* Psbl Bugs: 1. sometimes wont accept submissions
+2. Game starts over automatically sometimes
+4. "too late!" msg
+*/
+
 var express = require('express');
 var app = express(); // enclose the express function in a variable called app
 var http = require('http').Server(app);
@@ -89,7 +94,7 @@ io.on('connection', function(socket) {
 			if (msgArray[0] === "/aloita" && msgArray.length <= 2 && pelivaihe=="ei") {
 
 				pelivaihe ="intro";
-				v.msg ="Käyttäjä " + users[socket.id] +" käynnisti pelin. Ohjeet: vastaa /v + keksimäsi lause annetuista alkukirjaimista. Esim. AEKO: '/v Avaruusolioiden eritteet kirvelevät omituisesti.'";
+				v.msg ="Käyttäjä " + users[socket.id] +" käynnisti pelin. Vastaa esim. AEKO: '/v Avaruusolioiden eritteet kirvelevät omituisesti.'";
 				v.username = botName;
 				io.emit('viesti', v);
 
@@ -100,14 +105,14 @@ io.on('connection', function(socket) {
 
 				var vastaus = msgArray.slice(1);
 
-				kasitteleVastaus(vastaus, v.username);
+				kasitteleVastaus(vastaus, socket.id);
 			}
 
 			if (msgArray[0] === "/v" && msgArray.length === 2 && pelivaihe === "aanestys") {
 
 				var vastaus = msgArray.slice(1);
 
-				kasitteleVastaus(vastaus, v.username);
+				kasitteleVastaus(vastaus, socket.id);
 			}
 		}
 		else io.emit('viesti', v);
@@ -183,7 +188,7 @@ io.on('connection', function(socket) {
 		io.emit('boldviesti', {username: botName, msg: "Kierros " + kierros +": " +akronyymi});
 		io.emit('akronyymi', "Akronyymi: " + akronyymi);
 
-		aika=30;
+		aika=akrPituus*7;
 
 		var sekuntikello = setInterval(function() {
 
@@ -203,10 +208,12 @@ io.on('connection', function(socket) {
 
 function listaaVastaukset() {
 
-	if (vastaukset.length===0) { 
-		io.emit('viesti', {username: botName, msg: "Pelakkaa ny saatana"});
-		if (kierros <5) aloitaPeli();
-		else pelaajaPisteet();
+	if (vastaukset.length< 2) { 
+		
+		if (vastaukset.length===0) io.emit('viesti', {username: botName, msg: "Pelakkaa ny saatana"});
+		if (vastaukset.length===1) io.emit('viesti', {username: botName, msg: "Ei hirveesti pointtia äänestää kun vaa yks lause. Pelakkaa ny saatana"});
+		if (kierros <5) setTimeout(aloitaPeli, 3000);
+		else setTimeout(pelaajaPisteet, 3000);
 
 		return;
 	}
@@ -215,7 +222,7 @@ function listaaVastaukset() {
 		io.emit('boldviesti', {username: botName, msg: (a+1)+". " + vastaukset[a].vastaus});
 	}
 
-	io.emit('viesti', {username: botName, msg: "Äänestä suosikkiasi komennolla /v [nro], esim. /v 666"});
+	io.emit('viesti', {username: botName, msg: "Äänestä suosikkiasi komennolla /v [nro], esim. /v 666. Jos lähetit lauseen, äänestämättä jättämisestä tulee miinuspiste."});
 
 	pelivaihe ="aanestys";
 	io.emit('akronyymi', "Äänestä nyt");
@@ -224,7 +231,7 @@ function listaaVastaukset() {
 		kierrospisteet[kierros][k]=0;
 	}
 	
-	aika=15;
+	aika=vastaukset.length*8;
 
 		var sekuntikello = setInterval(function() {
 
@@ -245,10 +252,19 @@ function kierrosTulokset() {
 
 
 	for (var t=0; t < vastaukset.length; t++) {
-		io.emit('boldviesti', {username: botName, msg: vastaukset[t].pelaaja +": " + vastaukset[t].vastaus + " - " + kierrospisteet[kierros][t] +"p."});
+
+		// Vastasi mutta ei äänestänyt -> -1p.
+		if (answer[vastaukset[t].pelaajaID] && !vote[vastaukset[t].pelaajaID]) {
+			kierrospisteet[kierros][t]--;
+			if (!tulokset.hasOwnProperty(vastaukset[t].pelaajaID)) tulokset[vastaukset[t].pelaajaID]=-1;
+			else tulokset[vastaukset[t].pelaajaID]--;
+		}
+		
+		// Printtaa pelaajan vastaukselle annetut pisteet
+		io.emit('boldviesti', {username: botName, msg: users[vastaukset[t].pelaajaID] +": " + vastaukset[t].vastaus + " - " + kierrospisteet[kierros][t] +"p."});
 	}
 	setTimeout(pelaajaPisteet, 2000);
-	setTimeout(aloitaPeli, 5000);
+	if (kierros <5) setTimeout(aloitaPeli, 5000);
 }
 
 function pelaajaPisteet() {
@@ -268,9 +284,10 @@ function pelaajaPisteet() {
 	
 	var results=[];
 	
-	for (pelaaja in tulokset) {
+	for (pelaajaID in tulokset) {
 
-		results.push([tulokset[pelaaja], pelaaja]);
+		console.log (pelaajaID + ": " + tulokset[pelaajaID]);
+		results.push([tulokset[pelaajaID], users[pelaajaID]]);
 		results = results.sort(function(a,b) {
 
 			return b[0] - a[0];
@@ -288,7 +305,7 @@ function pelaajaPisteet() {
 	if (kierros===5) {pelivaihe="ei"; kierros=0; vastaukset={};}
 }
 
-function kasitteleVastaus (vastaus, pelaaja) {
+function kasitteleVastaus (vastaus, pelaajaID) {
 
 	var validi = true;
 
@@ -305,28 +322,28 @@ function kasitteleVastaus (vastaus, pelaaja) {
 		}
 
 		if (!validi) {
-			socket.emit('privaviesti', {username: botName, msg: pelaaja+": annoit virheellisen vastauksen. Kokeile uudelleen!"});
+			socket.emit('privaviesti', {username: botName, msg: users[pelaajaID]+": annoit virheellisen vastauksen. Kokeile uudelleen!"});
 		}
 		else {
 
 			answer[socket.id]=true;
-			vastaukset.push({pelaaja: pelaaja, vastaus: vastaus.join(' ')});
-			socket.emit('privaviesti', {username: botName, msg: pelaaja+": OK."});
+			vastaukset.push({pelaajaID: pelaajaID, vastaus: vastaus.join(' ')});
+			socket.emit('privaviesti', {username: botName, msg: users[pelaajaID]+": OK."});
 		}
 	}
 	else if (pelivaihe==="aanestys") {
 
 		if (isNaN(vastaus) || !vastaukset[vastaus-1]) {
 
-			socket.emit('privaviesti', {username: botName, msg: pelaaja+": äänestit virheellisesti. Kokeile uudelleen!"});
+			socket.emit('privaviesti', {username: botName, msg: users[pelaajaID]+": äänestit virheellisesti. Kokeile uudelleen!"});
 		}
 		else if (vote[socket.id] === true) {
 
-			socket.emit('privaviesti', {username: botName, msg: pelaaja+": et voi äänestää monta kertaa. Homo."});
+			socket.emit('privaviesti', {username: botName, msg: users[pelaajaID]+": et voi äänestää monta kertaa. Homo."});
 		}
-		else if (vastaukset[vastaus-1].pelaaja === users[socket.id]) {
+		else if (vastaukset[vastaus-1].pelaajaID === users[socket.id]) {
 
-			socket.emit('privaviesti', {username: botName, msg: pelaaja+": et voi äänestää ITTEES vitun pelle."});
+			socket.emit('privaviesti', {username: botName, msg: users[pelaajaID]+": et voi äänestää ITTEES vitun pelle."});
 
 		}
 		else {
@@ -335,10 +352,10 @@ function kasitteleVastaus (vastaus, pelaaja) {
 			kierrospisteet[kierros][vastaus-1]++;
 			console.log (tulokset);
 
-			if (!tulokset.hasOwnProperty(vastaukset[vastaus-1].pelaaja)) tulokset[vastaukset[vastaus-1].pelaaja]=1;
-			else tulokset[vastaukset[vastaus-1].pelaaja]++;
+			if (!tulokset.hasOwnProperty(vastaukset[vastaus-1].pelaajaID)) tulokset[vastaukset[vastaus-1].pelaajaID]=1;
+			else tulokset[vastaukset[vastaus-1].pelaajaID]++;
 
-			socket.emit('privaviesti', {username: botName, msg: pelaaja+": OK."});
+			socket.emit('privaviesti', {username: botName, msg: users[pelaajaID]+": OK."});
 		}
 	}
 }
