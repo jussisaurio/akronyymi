@@ -40,7 +40,7 @@ io.on('connection', function(socket) {
 		
 		users[socket.id] = "Nimetön" + animals[Math.floor(Math.random()*animals.length)] + Math.floor(Math.random()*100 +1);
 				var data = {username: users[socket.id]};
-		var welcomeData = {username: botName, msg: "Moro " + users[socket.id] + ", pikaohjeet: komento '/aloita' alottaa pelin, /komento '/nick haluamasiNimi' vaihtaa käyttäjänimeä, '/v vastaus' puolestaan lähettää keksimäsi lauseen tai äänestää haluamaasi lausetta."};
+		var welcomeData = {username: botName, msg: "Moro " + users[socket.id] + ", tässä pikaohjeet: komento '/aloita' alottaa pelin, komento '/nick haluamasiNimi' vaihtaa käyttäjänimeä, '/v vastaus' puolestaan lähettää keksimäsi lauseen tai äänestää haluamaasi lausetta."};
 		socket.emit('privaviesti', welcomeData);
 		
 		var userlist="";
