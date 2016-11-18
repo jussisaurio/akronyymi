@@ -1,5 +1,5 @@
 * { margin: 0; padding: 0; box-sizing: border-box;}
-body {font: 13px Helvetica, Arial;}
+body {font-size: 13px; font-family: Gloria Hallelujah, cursive;}
 form {background: #000; padding: 3px; border-radius: 10px; position: relative; left: 17%; top: 15px; width: 66%;}
 form input {border: 0; padding: 10px; width: 90%; margin-right: .5%;}
 form button {color: white; font-weight: bold; width: 9%; background: darkblue; border: solid 2px darkblue; border-radius: 5px; padding: 10px;}
@@ -16,11 +16,12 @@ form button:hover {background: white; color: darkblue;}
 	padding: 20px;
 	width: 66%;
 	position: relative;
-	top: 20px;
+	top: 1px;
 	left: 17%;
-	height: 500px;
-	overflow-y: scroll;
+	height: 400px;
+	overflow-y: hidden;
 	display: block;
+	font-family: courier;
 }
 
 .nicks {
@@ -30,7 +31,7 @@ form button:hover {background: white; color: darkblue;}
 	padding: 10px;
 	width: 66%;
 	position: relative;
-	top: 20px;
+	top: 0;
 	left: 17%;
 	height: 40px;
 	overflow: hidden;
@@ -39,10 +40,22 @@ form button:hover {background: white; color: darkblue;}
 
 .page-header {
 
+	margin: 0;
 	position: relative; left: 17%; top: 0%; width: 66%;
 	text-align: center;
-	font-size: 5rem;
 }
+
+h1 {
+
+	font-size: 50px;
+}
+
+h4 {
+
+	font-size: 25px;
+}
+
+
 
 .puzzlebox {
 
@@ -50,9 +63,9 @@ form button:hover {background: white; color: darkblue;}
 	width: 50%;
 	left: 25%;
 	top: 0;
-	height: 100px;
+	height: 80px;
 	text-align: center;
-	padding: 30px;
+	padding: 10px;
 	display: block;
 }
 
@@ -60,8 +73,11 @@ form button:hover {background: white; color: darkblue;}
 
 	position: relative;
 	height:20px;
+	bottom: 15px;
 	text-align: center;
 	display: block;
+	font-size: 14px;
+	margin: auto;
 
 }
 
