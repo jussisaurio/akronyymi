@@ -15,7 +15,7 @@ var users=[];
 var vote=[];
 var kierrospisteet=[];
 var tulokset={};
-var animals = ["Monkey", "Zebra", "Pigeon", "Hamster", "Kookaburra", "Chimp", "Dog", "Hippo", "Rhinoceros"];
+var animals = ["Apina", "Seepra", "Pulu", "Hamsteri", "Kookaburra", "Simpanssi", "Koira", "Norsu", "Bonobo", "Pässi", "Mufloni"];
 var vastaukset=[];
 var kierros=0;
 var aika=0;
@@ -38,9 +38,9 @@ io.on('connection', function(socket) {
 	socket.on('join', function(session) {
 
 		
-		users[socket.id] = "Anonymous" + animals[Math.floor(Math.random()*animals.length)] + Math.floor(Math.random()*100);
+		users[socket.id] = "Nimetön" + animals[Math.floor(Math.random()*animals.length)] + Math.floor(Math.random()*100 +1);
 				var data = {username: users[socket.id]};
-		var welcomeData = {username: botName, msg: "Vitun " + users[socket.id] + " tervetuloo tsättäILEEEN, tän pitäs näkyy sulle vaa privana ;)"};
+		var welcomeData = {username: botName, msg: "Moro " + users[socket.id] + ", pikaohjeet: komento '/aloita' alottaa pelin, /komento '/nick haluamasiNimi' vaihtaa käyttäjänimeä, '/v vastaus' puolestaan lähettää keksimäsi lauseen tai äänestää haluamaasi lausetta."};
 		socket.emit('privaviesti', welcomeData);
 		
 		var userlist="";
@@ -50,6 +50,8 @@ io.on('connection', function(socket) {
 		});
 		console.log(users);
 		io.emit('kayttajat', userlist);
+
+		// socket.emit('akronyymi', "Akronyymi: " + akronyymi);
 	});
 	
 
@@ -86,13 +88,11 @@ io.on('connection', function(socket) {
 			if (msgArray[0] === "/aloita" && msgArray.length <= 2 && pelivaihe=="ei") {
 
 				pelivaihe ="intro";
-				v.msg ="Nöniin, käyttäjä " + users[socket.id] +" haluaa pelata akronyymipeli PASKAa. Luvassa 5 kierrosta. "
-				if (msgArray[1] && msgArray[1].toLowerCase() === "säännöt") v.msg += "Pelin tarkoituksena on keksiä mahdollisimman helmi lause, fraasi tahi vastaava annetusta akronyymista. Esim. akronyymista JEES keksi vaikka Jeesus Elää Emmoo Sienipäissäni. =D ";
-				v.msg += "Aloitetaan pian...";
+				v.msg ="Käyttäjä " + users[socket.id] +" käynnisti pelin. Ohjeet: vastaa /v + keksimäsi lause annetuista alkukirjaimista. Esim. AEKO: '/v Avaruusolioiden eritteet kirvelevät omituisesti.'";
 				v.username = botName;
-				io.emit('viesti', v); //
+				io.emit('viesti', v);
 
-				setTimeout(aloitaPeli, 2000);
+				setTimeout(aloitaPeli, 10000);
 			}
 
 			if (msgArray[0] === "/v" && msgArray.length > 1 && pelivaihe === "laadinta") {
