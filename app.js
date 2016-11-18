@@ -22,7 +22,7 @@ var kierros=0;
 var aika=0;
 
 app.set('view engine', 'ejs') // set the express view engine to ejs (embedded javascript & html)
-app.use('/styles', express.static('styles')); // route requests to styles folder (html file requests css files)
+app.use('/assets', express.static('assets')); // route requests to styles folder (html file requests css files)
 
 
 
