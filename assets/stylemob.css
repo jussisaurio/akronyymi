@@ -19,7 +19,7 @@ form button:hover {background: white; color: darkblue;}
 	top: 1px;
 	left: 0%;
 	display: block;
-	height: 40%;
+	height: 35%;
 	overflow-y: hidden;
 	
 	font-family: courier;
@@ -34,7 +34,7 @@ form button:hover {background: white; color: darkblue;}
 	position: relative;
 	top: 0;
 	left: 0;
-	height: 40px;
+	height: 7%;
 	overflow: hidden;
 	display: block;
 }
