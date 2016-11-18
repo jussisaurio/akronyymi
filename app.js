@@ -225,7 +225,7 @@ function listaaVastaukset() {
 	io.emit('viesti', {username: botName, msg: "Äänestä suosikkiasi komennolla /v [nro], esim. /v 666. Jos lähetit lauseen, äänestämättä jättämisestä tulee miinuspiste."});
 
 	pelivaihe ="aanestys";
-	io.emit('akronyymi', "Äänestä nyt");
+	io.emit('akronyymi', "Äänestä nyt (/v nro)");
 
 	for (var k=0; k < vastaukset.length; k++) {
 		kierrospisteet[kierros][k]=0;
