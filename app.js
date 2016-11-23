@@ -83,7 +83,7 @@ io.on('connection', function(socket) {
 				v.newName = users[socket.id];
 				v.msg = "*** " + oldUser + " vaihtoi nimimerkikseen " + users[socket.id] + " ***";
 				v.nickChange = true;
-				io.emit('viesti', v);
+				io.emit('boldviesti', v);
 
 				var userlist="";
 				Object.keys(users).forEach(function (key){
@@ -99,9 +99,9 @@ io.on('connection', function(socket) {
 				pelivaihe ="intro";
 				v.msg ="Käyttäjä " + users[socket.id] +" käynnisti pelin. Vastaa esim. AEKO: '/v Avaruusolioiden eritteet kirvelevät omituisesti.'";
 				v.username = botName;
-				io.emit('viesti', v);
+				io.emit('boldviesti', v);
 
-				setTimeout(aloitaPeli, 1000);
+				setTimeout(aloitaPeli, 5000);
 			}
 
 			if (msgArray[0] === "/v" && msgArray.length > 1 && pelivaihe === "laadinta") {
@@ -111,7 +111,7 @@ io.on('connection', function(socket) {
 				kasitteleVastaus(vastaus, socket.id);
 			}
 
-
+ 
 		}
 		else io.emit('viesti', v);
 	});
@@ -187,7 +187,7 @@ io.on('connection', function(socket) {
 		io.emit('boldviesti', {username: botName, msg: "Kierros " + kierros +": " +akronyymi});
 		io.emit('akronyymi', "Akronyymi: " + akronyymi);
 
-		aika=akrPituus*4;
+		aika=akrPituus*9;
 
 		var sekuntikello = setInterval(function() {
 
@@ -202,15 +202,15 @@ io.on('connection', function(socket) {
 				pelivaihe="aanestys";
 				listaaVastaukset();
 			}
-		}, 1000);
+		}, 1500);
 	}
 
 function listaaVastaukset() {
 
 	if (vastaukset.length< 2) { 
 		
-		if (vastaukset.length===0) io.emit('viesti', {username: botName, msg: "Pelakkaa ny saatana"});
-		if (vastaukset.length===1) io.emit('viesti', {username: botName, msg: "Ei hirveesti pointtia äänestää kun vaa yks lause. Pelakkaa ny saatana"});
+		if (vastaukset.length===0) io.emit('boldviesti', {username: botName, msg: "Pelakkaa ny saatana"});
+		if (vastaukset.length===1) io.emit('boldviesti', {username: botName, msg: "Ei hirveesti pointtia äänestää kun vaa yks lause. Pelakkaa ny saatana"});
 		if (kierros <5) setTimeout(aloitaPeli, 3000);
 		else setTimeout(pelaajaPisteet, 3000);
 

@@ -24,9 +24,8 @@ form button {color: white; font-weight: bold; width: 18%; background: darkblue; 
 	top: 1px;
 	left: 0%;
 	display: inline-block;
-	height: 40%;
+	height: 47%;
 	overflow-y: hidden;
-	
 	font-family: courier;
 }
 
@@ -65,7 +64,7 @@ h4 {
 
 .akro {
 
-	font-size: 1rem !important;
+	font-size: 1.3rem !important;
 }
 
 .puzzlebox {
