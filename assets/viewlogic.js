@@ -1,6 +1,11 @@
 $( document ).ready(function() {
 				
 
+				var scroller = setInterval (function(){
+
+					$('.msgs')[0].scrollTop = $('.msgs')[0].scrollHeight;
+				}, 1000);
+
 				var socket = io();
 
 				socket.emit('join');
@@ -60,18 +65,11 @@ $( document ).ready(function() {
 				});
 
 				socket.on('privaviesti', function(v) {
-
 					$('#viestit').append($('<li class="private">').text(v.username + ": " + v.msg));
-					$('.msgs')[0].scrollTop = $('.msgs')[0].scrollHeight;
-
 				});
 
 				socket.on('boldviesti', function(v) {
-
 					$('#viestit').append($('<li class="boldattu">').text(v.username + ": " + v.msg));
-					$('.msgs')[0].scrollTop = $('.msgs')[0].scrollHeight;
-
-
 				});
 
 				socket.on('viesti', function(v) {
@@ -84,7 +82,7 @@ $( document ).ready(function() {
 
 				socket.on('akronyymi', function(v) {
 
-					$('.puzzlebox').html('<h2>' + v + "</h2>");
+					$('.puzzlebox').html('<h2 class="akro">' + v + "</h2>");
 				});
 
 				socket.on('kello', function(v) {

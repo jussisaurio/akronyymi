@@ -9,6 +9,7 @@ form button:hover {background: white; color: darkblue;}
 #viestit li {padding: 5px 10px;}
 #viestit li:nth-child(odd) { background: #f0b8aa; }
 
+
 .msgs {
 
 	border: solid 2px black;
@@ -68,6 +69,7 @@ h4 {
 	padding: 10px;
 	display: block;
 	background: #f0b8aa;
+	margin: 0 !important;
 }
 
 .timer {
