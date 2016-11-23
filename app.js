@@ -202,7 +202,7 @@ io.on('connection', function(socket) {
 				pelivaihe="aanestys";
 				listaaVastaukset();
 			}
-		}, 1500);
+		}, 1000);
 	}
 
 function listaaVastaukset() {
