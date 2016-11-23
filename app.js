@@ -61,6 +61,9 @@ io.on('connection', function(socket) {
 	});
 	
 
+	socket.on('aani', function(nro) {
+		kasitteleVastaus(nro, socket.id);
+	});
 
 	socket.on('viesti', function(v) {
 
@@ -98,7 +101,7 @@ io.on('connection', function(socket) {
 				v.username = botName;
 				io.emit('viesti', v);
 
-				setTimeout(aloitaPeli, 10000);
+				setTimeout(aloitaPeli, 1000);
 			}
 
 			if (msgArray[0] === "/v" && msgArray.length > 1 && pelivaihe === "laadinta") {
@@ -108,12 +111,7 @@ io.on('connection', function(socket) {
 				kasitteleVastaus(vastaus, socket.id);
 			}
 
-			if (msgArray[0] === "/v" && msgArray.length === 2 && pelivaihe === "aanestys") {
 
-				var vastaus = msgArray.slice(1);
-
-				kasitteleVastaus(vastaus, socket.id);
-			}
 		}
 		else io.emit('viesti', v);
 	});
@@ -137,6 +135,7 @@ io.on('connection', function(socket) {
 
 	function aloitaPeli () {
 
+		io.emit('votepopupClose');
 		if (kierros===0) tulokset={};
 		if (kierros >=5) {pelivaihe="ei"; return;}
 
@@ -188,7 +187,7 @@ io.on('connection', function(socket) {
 		io.emit('boldviesti', {username: botName, msg: "Kierros " + kierros +": " +akronyymi});
 		io.emit('akronyymi', "Akronyymi: " + akronyymi);
 
-		aika=akrPituus*7;
+		aika=akrPituus*4;
 
 		var sekuntikello = setInterval(function() {
 
@@ -217,35 +216,30 @@ function listaaVastaukset() {
 
 		return;
 	}
+	
+	var vastauslista = [];
 	for (var a=0; a < vastaukset.length; a++) {
 
-		io.emit('boldviesti', {username: botName, msg: (a+1)+". " + vastaukset[a].vastaus});
+		// io.emit('boldviesti', {username: botName, msg: (a+1)+". " + vastaukset[a].vastaus});
+		vastauslista.push({nro: a, vastaus: vastaukset[a].vastaus});
 	}
 
-	io.emit('viesti', {username: botName, msg: "Äänestä suosikkiasi komennolla /v [nro], esim. /v 666. Jos lähetit lauseen, äänestämättä jättämisestä tulee miinuspiste."});
-
+	//io.emit('viesti', {username: botName, msg: "Äänestä suosikkiasi komennolla /v [nro], esim. /v 666. Jos lähetit lauseen, äänestämättä jättämisestä tulee miinuspiste."});
+	io.emit('votepopup', {data: vastauslista, tila: "aanestys", title: "Äänestä klikkaamalla parasta ehdotusta"});
 	pelivaihe ="aanestys";
-	io.emit('akronyymi', "Äänestä nyt (/v nro)");
+	// io.emit('akronyymi', "Äänestä nyt (/v nro)");
 
 	for (var k=0; k < vastaukset.length; k++) {
 		kierrospisteet[kierros][k]=0;
 	}
 	
-	aika=vastaukset.length*8;
 
-		var sekuntikello = setInterval(function() {
+		setTimeout(function() {
 
-			io.emit('kello', aika);
-			aika--;
-
-			if (aika<0) {
-
-				clearInterval(sekuntikello);
-				io.emit('kello', '');
+				io.emit('votepopupClose');
 				pelivaihe="kierrostulokset";
 				kierrosTulokset();
-			}
-		}, 1000);
+		}, vastaukset.length*8000);
 }
 
 function kierrosTulokset() {
@@ -264,19 +258,20 @@ function kierrosTulokset() {
 		io.emit('boldviesti', {username: botName, msg: users[vastaukset[t].pelaajaID] +": " + vastaukset[t].vastaus + " - " + kierrospisteet[kierros][t] +"p."});
 	}
 	setTimeout(pelaajaPisteet, 2000);
-	if (kierros <5) setTimeout(aloitaPeli, 5000);
+	if (kierros <5) setTimeout(aloitaPeli, 7000);
 }
 
 function pelaajaPisteet() {
 
+	var tulosTitle="";
 	if (kierros <=4) {
-	io.emit('viesti', {username: botName, msg: "Välitulokset:"});
+	tulosTitle="Välitulokset";
 
 	console.log(Object.keys(tulokset));
 	}
 	
 	if (kierros===5) {
-	io.emit('viesti', {username: botName, msg: "Lopputulokset:"});
+	tulosTitle="Lopputulokset";
 
 	console.log(Object.keys(tulokset));
 
@@ -294,9 +289,7 @@ function pelaajaPisteet() {
 		});
 	}
 
-	results.forEach(function (r){
-		io.emit('boldviesti', {username: botName, msg: r[1] +": " + r[0] +"p."});
-	});
+	io.emit('votepopup', {data: results, tila: "loppu", title: tulosTitle});
 	
 
 
@@ -328,32 +321,32 @@ function kasitteleVastaus (vastaus, pelaajaID) {
 
 			answer[socket.id]=true;
 			vastaukset.push({pelaajaID: pelaajaID, vastaus: vastaus.join(' ')});
+			if (!tulokset.hasOwnProperty(vastaukset[vastaukset.length-1].pelaajaID)) tulokset[vastaukset[vastaukset.length-1].pelaajaID]=0;
 			socket.emit('privaviesti', {username: botName, msg: users[pelaajaID]+": OK."});
 		}
 	}
 	else if (pelivaihe==="aanestys") {
 
-		if (isNaN(vastaus) || !vastaukset[vastaus-1]) {
+		if (isNaN(vastaus) || !vastaukset[vastaus]) {
 
 			socket.emit('privaviesti', {username: botName, msg: users[pelaajaID]+": äänestit virheellisesti. Kokeile uudelleen!"});
 		}
 		else if (vote[socket.id] === true) {
 
-			socket.emit('privaviesti', {username: botName, msg: users[pelaajaID]+": et voi äänestää monta kertaa. Homo."});
+			socket.emit('illegalVote', {msg: "et voi äänestää monta kertaa. Homo."});
 		}
-		else if (vastaukset[vastaus-1].pelaajaID === users[socket.id]) {
+		else if (vastaukset[vastaus].pelaajaID === socket.id) {
 
-			socket.emit('privaviesti', {username: botName, msg: users[pelaajaID]+": et voi äänestää ITTEES vitun pelle."});
+			socket.emit('illegalVote', {msg: "et voi äänestää ITTEES vitun pelle."});
 
 		}
 		else {
-
+			socket.emit('votepopupClose');
 			vote[socket.id] = true;
-			kierrospisteet[kierros][vastaus-1]++;
+			kierrospisteet[kierros][vastaus]++;
 			console.log (tulokset);
 
-			if (!tulokset.hasOwnProperty(vastaukset[vastaus-1].pelaajaID)) tulokset[vastaukset[vastaus-1].pelaajaID]=1;
-			else tulokset[vastaukset[vastaus-1].pelaajaID]++;
+			tulokset[vastaukset[vastaus].pelaajaID]++;
 
 			socket.emit('privaviesti', {username: botName, msg: users[pelaajaID]+": OK."});
 		}

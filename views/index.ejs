@@ -12,6 +12,7 @@
 		<link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
 	</head>
 	<body>
+	<div class="container-fluid">
 					<div class="page-header">
 						<h1>PASKA</h1>
 					<h4>Peli Akronyymien Selittämisestä Komiikan Avulla</h4>
@@ -23,12 +24,30 @@
 					<div class="msgs">
 					<ul id="viestit"></ul>
 					</div>
-		<form action="">
-			<input id="v" autocomplete="off" /><button type="submit">Puhu paskaa</button>
-		</form>
+					<form action="">
+						<input id="v" autocomplete="off" /><button type="submit">Puhu paskaa</button>
+					</form>
+
+					<!-- bootstrap popup aukeaa kun äänestetään -->
+					<div id="votemodal" class="modal fade" role="dialog">
+						<div class="modal-dialog">
+							<!-- popupin sisältö -->
+							<div class="modal-content">
+								<div class="modal-header" style="padding: 2rem 3rem;">
+									<button type="button" style="font-size: 3rem" class="close" data-dismiss="modal">&times;</button>
+									<h4 id="votetitle">Äänestä nyt klikkaamalla parasta ehdotusta</h4>
+								</div>
+								<div id="vaihtoehdot" class="modal-body" style="padding: 2rem 3rem;">
+
+								</div>
+							</div>
+						</div>
+					</div>
+	</div>
 
 
 		<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 		<script src="/assets/viewlogic.js"></script>
 	</body>

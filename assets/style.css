@@ -7,7 +7,7 @@ form button:hover {background: white; color: darkblue;}
 
 #viestit { list-style-type: none; padding: 0; width:100%;}
 #viestit li {padding: 5px 10px;}
-#viestit li:nth-child(odd) { background: #eee; }
+#viestit li:nth-child(odd) { background: #f0b8aa; }
 
 .msgs {
 
@@ -67,6 +67,7 @@ h4 {
 	text-align: center;
 	padding: 10px;
 	display: block;
+	background: #f0b8aa;
 }
 
 .timer {
@@ -89,4 +90,14 @@ h4 {
 .boldattu {
 
 	font-weight: bold;
+}
+
+#votetitle {
+
+	text-align: center;
+}
+
+.tulos {
+
+	background: #f0b8aa;
 }
