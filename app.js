@@ -3,7 +3,7 @@
 4. "too late!" msg
 */
 
-var express = require('express');
+var express = require('express'); 
 var app = express(); // enclose the express function in a variable called app
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -13,7 +13,7 @@ var peli = require('./peli');
 //var bodyParser = require('body-parser');
 //var urlEncParser = bodyParser.urlencoded({ extended: false});
 var pelivaihe ="ei";
-var botName ="AKROBOT";
+var botName ="AKROBOT"; 
 var alkukirjaimet =[];
 var akronyymi="";
 var users=[];
@@ -239,7 +239,7 @@ function listaaVastaukset() {
 				io.emit('votepopupClose');
 				pelivaihe="kierrostulokset";
 				kierrosTulokset();
-		}, vastaukset.length*8000);
+		}, vastaukset.length*8000 + 5000);
 }
 
 function kierrosTulokset() {
