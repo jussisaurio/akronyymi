@@ -177,7 +177,7 @@ io.on('connection', function(socket) {
 		else if (rand < 982) kirj ="Ö"; 
 		else if (rand < 983) kirj ="G"; 
 		else if (rand < 984) kirj ="B";
-		else if (rand < 985) kirj ="F";
+		else if (rand < 985) kirj ="F"; 
 		else if (rand < 986) kirj ="C";
 
 		alkukirjaimet.push(kirj);

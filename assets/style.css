@@ -1,8 +1,8 @@
 * { margin: 0; padding: 0; box-sizing: border-box;}
 body {font-size: 13px; font-family: Gloria Hallelujah, cursive;}
-form {background: #000; padding: 3px; border-radius: 10px; position: relative; left: 17%; top: 15px; width: 66%;}
-form input {border: 0; padding: 10px; width: 90%; margin-right: .5%;}
-form button {color: white; font-weight: bold; width: 9%; background: darkblue; border: solid 2px darkblue; border-radius: 5px; padding: 10px;}
+form {background: #FFF; position: relative; left: 17%; top: 15px; width: 66%;}
+form input {border: solid 2px black; border-radius: 10px; padding: 10px; width: 90%; margin-right: .5%; height:30px;}
+form button {color: white; font-weight: bold; width: 9%; background: darkblue; border: solid 2px darkblue; border-radius: 5px; padding: 2px;}
 form button:hover {background: white; color: darkblue;}
 
 #viestit { list-style-type: none; padding: 0; width:100%;}
@@ -102,5 +102,10 @@ h4 {
 .tulos {
 
 	background: #f0b8aa;
+	white-space: normal;
+}
+
+li {
+
 	white-space: normal;
 }
